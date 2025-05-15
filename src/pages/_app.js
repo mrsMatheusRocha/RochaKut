@@ -10,7 +10,10 @@ const GlobalStyle = createGlobalStyle`
 
   body {
     font-family: sans-serif;
-    background-color: #D9E6F6;
+    background: url('https://image.api.playstation.com/vulcan/ap/rnd/202409/1611/875ccc48e74d960e0070687aa60efe28a62ca6ce3b81037e.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
   }
 
   #__next {

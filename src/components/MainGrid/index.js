@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+
 const MainGrid = styled.main`
   width: 100%;
   grid-gap: 10px;
@@ -17,7 +18,7 @@ const MainGrid = styled.main`
     display: grid;
     grid-template-areas: 
       "profileArea welcomeArea profileRelationsArea";
-    grid-template-columns: 160px 1fr 312px;
+    grid-template-columns: 200px 1fr 312px;
   }
 `;
 export default MainGrid;
