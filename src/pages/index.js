@@ -32,11 +32,8 @@ function ProfileRelationsBox(props) {
 
 export default function Home() {
   const userGithub = 'mrsMatheusRocha';
-  const [comunidades, setComunidades] = useState([{
-    id: '12802378123789378912789789123896123', 
-    title: 'Eu odeio acordar cedo',
-    image: 'https://alurakut.vercel.app/capa-comunidade-01.jpg'
-  }]);
+  const [comunidades, setComunidades] = useState([]);
+  const [pensamentos, setPensamentos] = useState([]);
   const pessoasFavoritas = [
     'HpBtw',
     'zPlcs',
@@ -55,8 +52,39 @@ export default function Home() {
     })
     .then (function(resFull) {
       setSeguidores(resFull);
-    }, []);
-  })
+    });
+
+    fetch(`https://graphql.datocms.com/`, {
+      method: 'POST',
+      headers: {
+        'Authorization': '44fad9c156aba49aedad1f893e7dca',
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({'query': 
+        `
+        query {
+          allCommunities {
+            id
+            title
+            imageUrl
+            creatorSlug
+          }
+          allThoughts {
+            id
+            thought
+          }
+        }
+      `})
+    })
+    .then((res) => res.json())
+    .then((resFull) => {
+      const comunidadesDato = resFull.data.allCommunities;
+      const pensamentosDato = resFull.data.allThoughts;
+      setComunidades(comunidadesDato);
+      setPensamentos(pensamentosDato);
+    })
+  }, [])
 
   return (
     <>
@@ -78,15 +106,28 @@ export default function Home() {
               e.preventDefault();
               const dataForm = new FormData(e.target)
               const comunidade = {
-                id: new Date().toISOString(),
                 title: dataForm.get('title'),
-                image: dataForm.get('image')
+                imageUrl: dataForm.get('image'),
+                creatorSlug: userGithub
               }
-              const comunidadesAtualizadas = [
-                ...comunidades,
-                comunidade
-              ];
-              setComunidades(comunidadesAtualizadas)
+
+              fetch('/api/comunidades', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json', 
+                },
+                body: JSON.stringify(comunidade),
+              })
+              .then(async (res) => {
+                const dados = await res.json();
+                const comunidade = dados.record;
+                const comunidadesAtualizadas = [
+                  ...comunidades,
+                  comunidade
+                ];
+                setComunidades(comunidadesAtualizadas)
+              })
+
             }}>
               <div>
                 <input 
@@ -107,6 +148,59 @@ export default function Home() {
                 Criar comunidade
               </button>
             </form>
+          </Box>
+          <Box>
+            <h2 className="subTitle">O que você está pensando?</h2>
+            <form onSubmit={function handleCriarPensamento(e) {
+              e.preventDefault();
+              const dataForm = new FormData(e.target)
+              const thought = {
+                thought: dataForm.get('thought'),
+              }
+
+              fetch('/api/pensamentos', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json', 
+                },
+                body: JSON.stringify(thought),
+              })
+              .then(async (res) => {
+                const dados = await res.json();
+                const novoPensamento = dados.recordThougths;
+                setPensamentos((pensamentosAtuais) => [
+                  ...pensamentosAtuais,
+                  novoPensamento
+                ]);
+              })
+
+            }}>
+              <div>
+                <input 
+                  placeholder='Digite o que está pensando' 
+                  name='thought' 
+                  aria-label='Digite o que está pensando' 
+                />
+              </div>
+              <button>
+                Publicar
+              </button>
+            </form>
+          </Box>
+          <Box>
+            <h2 className="smallTitle">
+              Pensamentos ({pensamentos.length})
+            </h2>
+            <ul>
+              {pensamentos.map((itemAtual) => {
+                return (
+                  <li style={{listStyleType: 'none'}} key={itemAtual.id}>
+                    <p>{itemAtual.thought}</p>
+                    <hr/>
+                  </li>
+                )
+              })}
+            </ul>
           </Box>
         </div>
         <div className='profileRelationsArea' style={{ gridArea: 'profileRelationsArea'}}>
@@ -139,8 +233,8 @@ export default function Home() {
               {comunidades.map((itemAtual) => {
                 return (
                   <li key={itemAtual.id}>
-                    <a href={`/users/${itemAtual.title}`}>
-                      <img src={itemAtual.image} />
+                    <a href={`/communities/${itemAtual.id}`}>
+                      <img src={itemAtual.imageUrl} />
                       <span>{itemAtual.title}</span>
                     </a>
                   </li>
