@@ -5,6 +5,7 @@ import nookies from 'nookies';
 import jwt from 'jsonwebtoken';
 import { ProfileRelationsBoxWrapper } from '@/components/ProfileRelations';
 import { AlurakutMenu, AlurakutProfileSidebarMenuDefault, OrkutNostalgicIconSet } from '@/lib/AluraKutCommons';
+import Head from 'next/head';
 
 function ProfileSideBar(props) {
   return (
@@ -94,6 +95,10 @@ export default function Home(props) {
 
   return (
     <>
+      <Head>
+        <title>Rochakut - Sua Rede Social</title>
+        <meta name="description" content="Bem-vindo ao Rochakut, sua rede social inspirada no Orkut!" />
+      </Head>
       <AlurakutMenu />
       <MainGrid>
         <div className='profileArea' style={{ gridArea: 'profileArea'}}>
