@@ -53,11 +53,7 @@ export default function Home(props) {
       return resServer.json();
     })
     .then (function(resFull) {
-      console.log('Seguidores:', resFull);
       setSeguidores(resFull);
-    })
-    .catch((error) => {
-      console.error('Erro ao buscar seguidores:', error);
     });
 
     fetch(`https://graphql.datocms.com/`, {
@@ -107,106 +103,21 @@ export default function Home(props) {
             <OrkutNostalgicIconSet />
           </Box>
           <Box>
-            <h2 className="subTitle">O que você deseja fazer?</h2>
-            <form onSubmit={function handleCriarComunidade(e) {
-              e.preventDefault();
-              const dataForm = new FormData(e.target)
-              const comunidade = {
-                title: dataForm.get('title'),
-                imageUrl: dataForm.get('image'),
-                creatorSlug: userGithub
-              }
-
-              fetch('/api/comunidades', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json', 
-                },
-                body: JSON.stringify(comunidade),
-              })
-              .then(async (res) => {
-                const dados = await res.json();
-                const comunidade = dados.record;
-                const comunidadesAtualizadas = [
-                  ...comunidades,
-                  comunidade
-                ];
-                setComunidades(comunidadesAtualizadas)
-              })
-
-            }}>
-              <div>
-                <input 
-                  placeholder='Qual vai ser o nome da sua comunidade?' 
-                  name='title' 
-                  aria-label='Qual vai ser o nome da sua comunidade?' 
-                  type='text'
-                />
-              </div>
-              <div>
-                <input 
-                  placeholder='Coloque uma url para usarmos de capa' 
-                  name='image' 
-                  aria-label='Coloque uma url para usarmos de capa' 
-                />
-              </div>
-              <button>
-                Criar comunidade
-              </button>
-            </form>
-          </Box>
-          <Box>
-            <h2 className="subTitle">O que você está pensando?</h2>
-            <form onSubmit={function handleCriarPensamento(e) {
-              e.preventDefault();
-              const dataForm = new FormData(e.target)
-              const thought = {
-                thought: dataForm.get('thought'),
-              }
-
-              fetch('/api/pensamentos', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json', 
-                },
-                body: JSON.stringify(thought),
-              })
-              .then(async (res) => {
-                const dados = await res.json();
-                const novoPensamento = dados.recordThougths;
-                setPensamentos((pensamentosAtuais) => [
-                  ...pensamentosAtuais,
-                  novoPensamento
-                ]);
-              })
-
-            }}>
-              <div>
-                <input 
-                  placeholder='Digite o que está pensando' 
-                  name='thought' 
-                  aria-label='Digite o que está pensando' 
-                />
-              </div>
-              <button>
-                Publicar
-              </button>
-            </form>
-          </Box>
-          <Box>
             <h2 className="smallTitle">
-              Pensamentos ({pensamentos.length})
+              Amigos que você segue ({seguidores.length}): 
             </h2>
-            <ul>
-              {pensamentos.map((itemAtual) => {
-                return (
-                  <li style={{listStyleType: 'none'}} key={itemAtual.id}>
-                    <p>{itemAtual.thought}</p>
-                    <hr/>
+            <ProfileRelationsBoxWrapper>
+              <ul>
+                {seguidores.map((pessoaAtual) => (
+                  <li key={pessoaAtual.id}>
+                    <a href={`https://github.com/${pessoaAtual.login}`} target="_blank" rel="noopener noreferrer">
+                      <img src={pessoaAtual.avatar_url} alt={`Imagem de ${pessoaAtual.login}`} />
+                      <span>{pessoaAtual.login}</span>
+                    </a>
                   </li>
-                )
-              })}
-            </ul>
+                ))}
+              </ul>
+            </ProfileRelationsBoxWrapper>
           </Box>
         </div>
         <div className='profileRelationsArea' style={{ gridArea: 'profileRelationsArea'}}>
@@ -215,7 +126,7 @@ export default function Home(props) {
               Seguidores ({seguidores.length})
             </h2>
             <ul>
-              {seguidores.slice(0,6).map((pessoaAtual) => (
+              {seguidores.slice(0, 6).map((pessoaAtual) => (
                 <li key={pessoaAtual.id}>
                   <a href={`https://github.com/${pessoaAtual.login}`} target="_blank" rel="noopener noreferrer">
                     <img src={pessoaAtual.avatar_url} alt={`Imagem de ${pessoaAtual.login}`} />
