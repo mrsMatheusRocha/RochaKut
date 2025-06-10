@@ -4,7 +4,7 @@
 [![Issues](https://img.shields.io/github/issues/mrsMatheusRocha/RochaKut)](https://github.com/mrsMatheusRocha/RochaKut/issues)
 
 Welcome to **RochaKut**!  
-A modern, developer-friendly project built with JavaScript.
+A modern social media, developer-friendly project built with JavaScript and inspired in Orkut.
 
 ---
 
