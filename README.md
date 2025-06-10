@@ -20,7 +20,7 @@ A modern, developer-friendly project built with JavaScript.
 
 ## 📸 Screenshots
 
-![Screenshot](https://github.com/mrsMatheusRocha/RochaKut/blob/5e0cb70b0de78bd774e22b266a6214d6a75b8327/public/rochakutminiatura.png)) 
+![Screenshot](https://github.com/mrsMatheusRocha/RochaKut/blob/5e0cb70b0de78bd774e22b266a6214d6a75b8327/public/rochakutminiatura.png)
 
 ---
 
